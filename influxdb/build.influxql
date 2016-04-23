@@ -1,0 +1,4 @@
+CREATE DATABASE cadvisor
+CREATE USER cadvisor
+GRANT WRITE ON cadvisor TO cadvisor
+GRANT READ ON cadvisor TO cadvisor

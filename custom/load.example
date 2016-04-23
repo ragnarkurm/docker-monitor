@@ -1,0 +1,28 @@
+#!/usr/bin/python2.7
+
+dbname = 'dbname'
+dbuser = 'dbuser'
+dbpass = 'dbpass'
+host = 'hostname'
+port = 8086
+sleep = 5
+
+import os
+import requests
+from requests.auth import HTTPBasicAuth
+import time
+
+while True:
+
+	load = os.getloadavg()[0]
+	data = "load_average,host=xxx value=" + str(load)
+
+	r = requests.post(
+		url='http://'+host+':'+str(port)+'/write?consistency=&db='+dbname+'&precision=&rp=',
+		auth=HTTPBasicAuth(dbuser, dbpass),
+		data=data,
+	)
+	# expected 204 - no content
+	# print r.status_code
+
+	time.sleep(sleep)
