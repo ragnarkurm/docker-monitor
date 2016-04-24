@@ -13,6 +13,9 @@ start: stop
 	-e INFLUXDB_NAME=cadvisor \
 	-e INFLUXDB_USER="`cat $(USERFILE)`" \
 	-e INFLUXDB_PASS="`cat $(PASSFILE)`" \
+	-e TERM=xterm \
+	-v ~/.bash_history:/root/.bash_history \
+	--restart=unless-stopped \
 	--link influxsrv:influxsrv \
 	-v "$(BASE)/data:/var/lib/grafana" \
 	-v "$(BASE)/logs:/var/log/grafana" \

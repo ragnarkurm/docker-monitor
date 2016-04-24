@@ -13,6 +13,8 @@ start: stop
 	--volume=/var/lib/docker/:/var/lib/docker:ro \
 	--link influxsrv:influxsrv \
 	-e TERM=xterm \
+	-v ~/.bash_history:/root/.bash_history \
+	--restart=unless-stopped \
 	$(START_FLAGS) \
 	--detach=true \
 	--name="$(CONTAINER)" \

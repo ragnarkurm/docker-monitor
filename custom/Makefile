@@ -6,6 +6,9 @@ start: stop
 		run \
 		--detach=true \
 		--link influxsrv:influxsrv \
+		-e TERM=xterm \
+		-v ~/.bash_history:/root/.bash_history \
+		--restart=unless-stopped \
 		-v "$(BASE)/load:/load" \
 		--name "$(CONTAINER)" \
 		monitoring-custom-pkg \

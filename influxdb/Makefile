@@ -19,13 +19,17 @@ start: stop
 	docker run \
 	--detach=true \
 	$(START_FLAGS) \
-	--expose 8083 \
 	--expose 8086 \
-	--expose 8090 \
-	--expose 8099 \
+	-e TERM=xterm \
+	-v ~/.bash_history:/root/.bash_history \
+	--restart=unless-stopped \
 	--name "$(CONTAINER)" \
 	--volume="$(BASE)/data:/data" \
 	tutum/influxdb
+
+#	--expose 8083 \
+#	--expose 8090 \
+#	--expose 8099 \
 
 stop:
 	@echo "Stopping container: $(CONTAINER)"
