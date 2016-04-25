@@ -1,0 +1,40 @@
+#!/usr/bin/python2.7
+
+import metrics_container_status
+
+from conf import *
+from requests.auth import HTTPBasicAuth
+import os
+import requests
+import socket
+import time
+
+host = socket.gethostname()
+
+data = []
+data = data + metrics_container_status.metrics()
+
+for i, d in enumerate(data):
+	measurement = d['measurement']
+	line = measurement
+	tags = d['tags']
+	if len(tags) > 0:
+		tags = ["{}={}".format(k, v) for k, v in tags.items()]
+		tags = ",".join(tags)
+		line = line + ',' + tags
+	fields = d['fields']
+	fields = ["{}={}".format(k, str(v)) for k, v in fields.items()]
+	fields = ",".join(fields)
+	line = line + ' ' + fields
+	data[i] = line
+
+data = "\n".join(data)
+
+url='http://{}:{}/write?consistency=&db={}&precision=&rp='.format(dbhost, dbport, dbname)
+r = requests.post(
+	url=url,
+	auth=HTTPBasicAuth(dbuser, dbpass),
+	data=data,
+)
+# expected 204 - no content
+# print r.status_code

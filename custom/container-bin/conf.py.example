@@ -1,0 +1,5 @@
+dbname = 'databasename'
+dbuser = 'databaseuser'
+dbpass = 'databasepass'
+dbhost = 'databasehost'
+dbport = 8086

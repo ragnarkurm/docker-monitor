@@ -9,10 +9,11 @@ start: stop
 		-e TERM=xterm \
 		-v ~/.bash_history:/root/.bash_history \
 		--restart=unless-stopped \
-		-v "$(BASE)/load:/load" \
+		-v "$(BASE)/container-bin:/usr/local/bin" \
+		-v /proc:/host/proc \
 		--name "$(CONTAINER)" \
 		monitoring-custom-pkg \
-		/load
+		/usr/local/bin/monitor
 
 stop:
 	@echo "Stopping container: $(CONTAINER)"

@@ -19,6 +19,7 @@ start: stop
 	docker run \
 	--detach=true \
 	$(START_FLAGS) \
+	--publish=127.0.0.1:8086:8086 \
 	--expose 8086 \
 	-e TERM=xterm \
 	-v ~/.bash_history:/root/.bash_history \

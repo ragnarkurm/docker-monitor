@@ -1,8 +1,0 @@
-#!/usr/bin/expect
-
-set timeout 200
-set container [lindex $argv 0]
-
-spawn docker logs -f -t "$container"
-expect "Starting cAdvisor"
-sleep 1
