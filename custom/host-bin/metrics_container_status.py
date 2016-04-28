@@ -7,9 +7,10 @@ def metrics():
 	status = {}
 	for l in lines:
 		l = l.partition(" ")[0]
-		prev = 0
 		if l in status:
 			prev = status[l]
+		else:
+			prev = 0
 		status[l] = prev + 1
 
 	for s in status:

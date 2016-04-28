@@ -1,40 +1,61 @@
 #!/usr/bin/python2.7
 
+sleep=20
+
 import metrics_container_status
+import metrics_cpu_exe_time
 
 from conf import *
 from requests.auth import HTTPBasicAuth
 import os
 import requests
 import socket
+import socket
+import sys
 import time
+
+# make sure only one instance runs
+try:
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.bind(('127.0.0.1', 12345))
+except:
+	sys.exit()
+
 
 host = socket.gethostname()
 
-data = []
-data = data + metrics_container_status.metrics()
+exe_prev = {}
+while True:
 
-for i, d in enumerate(data):
-	measurement = d['measurement']
-	line = measurement
-	tags = d['tags']
-	if len(tags) > 0:
-		tags = ["{}={}".format(k, v) for k, v in tags.items()]
-		tags = ",".join(tags)
-		line = line + ',' + tags
-	fields = d['fields']
-	fields = ["{}={}".format(k, str(v)) for k, v in fields.items()]
-	fields = ",".join(fields)
-	line = line + ' ' + fields
-	data[i] = line
+	data = []
+	data = data + metrics_container_status.metrics()
 
-data = "\n".join(data)
+	[exe_prev, exe_data] = metrics_cpu_exe_time.metrics(exe_prev)
+	data = data + exe_data
 
-url='http://{}:{}/write?consistency=&db={}&precision=&rp='.format(dbhost, dbport, dbname)
-r = requests.post(
-	url=url,
-	auth=HTTPBasicAuth(dbuser, dbpass),
-	data=data,
-)
-# expected 204 - no content
-# print r.status_code
+	for i, d in enumerate(data):
+		measurement = d['measurement']
+		line = measurement
+		tags = d['tags']
+		if len(tags) > 0:
+			tags = ["{}={}".format(k, v) for k, v in tags.items()]
+			tags = ",".join(tags)
+			line = line + ',' + tags
+		fields = d['fields']
+		fields = ["{}={}".format(k, str(v)) for k, v in fields.items()]
+		fields = ",".join(fields)
+		line = line + ' ' + fields
+		data[i] = line
+
+	data = "\n".join(data)
+
+	url='http://{}:{}/write?consistency=&db={}&precision=&rp='.format(dbhost, dbport, dbname)
+	r = requests.post(
+		url=url,
+		auth=HTTPBasicAuth(dbuser, dbpass),
+		data=data,
+	)
+	# expected 204 - no content
+	# print r.status_code
+
+	time.sleep(sleep)

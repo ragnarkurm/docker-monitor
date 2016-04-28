@@ -34,8 +34,8 @@ def metrics():
 				'task': k,
 			},
 			'fields': {
-				'value': data[k]
-			}
+				'value': data[k],
+			},
 		}
 
 	data = data.values()
