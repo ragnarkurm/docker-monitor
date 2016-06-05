@@ -7,7 +7,7 @@ start_public:
 	make start START_FLAGS='-p 8083:8083 -p 8086:8086'
 
 build: stop
-	echo -n "cadvisor" > "$(USERFILE)"
+	echo -n "influx" > "$(USERFILE)"
 	pwgen -s 20 1 > "$(PASSFILE)"
 	sudo rm -rf data
 	mkdir data
