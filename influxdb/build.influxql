@@ -1,4 +1,4 @@
-CREATE DATABASE cadvisor
-CREATE USER cadvisor
-GRANT WRITE ON cadvisor TO cadvisor
-GRANT READ ON cadvisor TO cadvisor
+CREATE DATABASE influx
+CREATE USER influx
+GRANT WRITE ON influx TO influx
+GRANT READ ON influx TO influx
