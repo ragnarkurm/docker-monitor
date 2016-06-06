@@ -1,4 +1,0 @@
-CREATE DATABASE influx
-CREATE USER influx
-GRANT WRITE ON influx TO influx
-GRANT READ ON influx TO influx
