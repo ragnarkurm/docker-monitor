@@ -1,18 +1,18 @@
-BASE = /www/monitor/custom
+BASE = /monitoring/custom
 CONTAINER = monitor-custom
 
 start: stop
 	docker \
 		run \
 		--detach=true \
-		--link influxsrv:influxsrv \
+		--link influx-server:influx-server \
 		-e TERM=xterm \
-		-v ~/.bash_history:/root/.bash_history \
 		--restart=unless-stopped \
+		-v ~/.bash_history:/root/.bash_history \
 		-v "$(BASE)/container-bin:/usr/local/bin" \
 		-v /proc:/host/proc \
 		--name "$(CONTAINER)" \
-		monitoring-custom-pkg \
+		python-influxdb-pkg \
 		/usr/local/bin/monitor
 
 stop:
