@@ -1,6 +1,6 @@
 CONTAINER = influx-server
 BASE = /monitoring/influxdb
-IP = 127.0.0.1
+IP = 194.204.13.108
 
 start_public:
 	make start START_FLAGS='-p 8083:8083 -p 8086:8086'
@@ -13,8 +13,7 @@ build: stop
 	make stop
 
 start: stop
-	docker \
-		run \
+	docker run \
 		--detach \
 		--env TERM=xterm \
 		--expose 8086 \
@@ -32,9 +31,16 @@ stop:
 
 cli:
 	docker exec \
-	-ti \
-	$(CONTAINER) \
-	/usr/bin/influx
+		-ti \
+		$(CONTAINER) \
+		/usr/bin/influx
 
 console:
-	docker logs -f "$(CONTAINER)"
+	docker logs \
+		-f "$(CONTAINER)"
+
+shell:
+	docker exec \
+		-it \
+		"$(CONTAINER)"
+		/bin/bash
