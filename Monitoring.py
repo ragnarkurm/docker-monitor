@@ -11,6 +11,7 @@ class Monitoring:
 		'precision': '',
 		'rp': '',
 	}
+	auth = None
 
 	def __init__(self, conffile):
 		import ConfigParser
@@ -35,7 +36,49 @@ class Monitoring:
 		for t in tags:
 			self.tags[t[0]] = t[1]
 
+		params = {
+			'db': self.db['name'],
+			'u': self.db['user'],
+			'p': self.db['pass'],
+			'precision': self.db['precision'],
+			'rp': self.db['rp'],
+		}
+		params = ['{}={}'.format(k, v) for k, v in params.iteritems()]
+		params = '&'.join(params)
+		self.url='http://{}:{}/write?{}'.format(self.db['host'], self.db['port'], params)
+
+		from requests.auth import HTTPBasicAuth
+		self.auth=HTTPBasicAuth(self.db['user'], self.db['pass'])
+
+
+	def collect_many(self, data):
+
+		for d in data:
+
+			measurement = d['measurement']
+
+			fields = d['fields']
+
+			if 'tags' in d:
+				tags = d['tags']
+			else:
+				tags = {}
+
+			if 'timestamp' in d:
+				timestamp = d['timestamp']
+			else:
+				timestamp = None
+
+			self.collect(measurement, tags, fields, timestamp)
+
 	def collect(self, measurement, tags, fields, timestamp = None):
+
+		if False: # debug
+			print measurement
+			print tags
+			print fields
+			print timestamp
+			return
 
 		line = ""
 
@@ -67,30 +110,20 @@ class Monitoring:
 
 	def send(self):
 
-		from requests.auth import HTTPBasicAuth
 		import requests
 
 		data = "\n".join(self.lines)
 
-		params = {
-			'db': self.db['name'],
-			'u': self.db['user'],
-			'p': self.db['pass'],
-			'precision': self.db['precision'],
-			'rp': self.db['rp'],
-		}
-		params = ['{}={}'.format(k, v) for k, v in params.iteritems()]
-		params = '&'.join(params)
-		url='http://{}:{}/write?{}'.format(self.db['host'], self.db['port'], params)
-
 		r = requests.post(
-			url=url,
-			auth=HTTPBasicAuth(self.db['user'], self.db['pass']),
+			url=self.url,
+			auth=self.auth,
 			data=data,
 		)
 
 		if r.status_code != 204:
 			raise Exception("Transaction failed.\n" + r.url + "\n" + r.text)
+
+		self.lines = []
 
 # from Monitoring import Monitoring
 # m = Monitoring('monitor.conf')
