@@ -12,8 +12,6 @@ keys = [
 	"guest_nice",
 ]
 
-import socket
-
 import re
 def metrics():
 
@@ -26,7 +24,6 @@ def metrics():
 	data = dict(zip(keys, values)) 
 	del data["id"]
 
-
 	for k in data:
 		data[k] = {
 			'measurement': 'cpu_task_time',
@@ -34,10 +31,8 @@ def metrics():
 				'task': k,
 			},
 			'fields': {
-				'value': data[k],
+				'value': int(data[k]),
 			},
 		}
 
-	data = data.values()
-
-	return data
+	return data.values()

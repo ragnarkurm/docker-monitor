@@ -5,44 +5,30 @@ sleep = 10
 import metrics_cpu_task_time
 import metrics_load_average
 
-from conf import *
-from requests.auth import HTTPBasicAuth
-import os
-import requests
 import socket
+import sys
 import time
 
-host = socket.gethostname()
+from Monitoring import Monitoring
+
+if len(sys.argv) < 1 + 1:
+	print 'Usage: ' + sys.argv[0] + ' <conf>'
+	sys.exit(1)
+
+conffile = sys.argv[1]
+
+m = Monitoring(conffile)
 
 while True:
 
-	data = []
-	data = data + metrics_cpu_task_time.metrics()
-	data = data + metrics_load_average.metrics()
+	data = metrics_cpu_task_time.metrics()
+	print data
+	m.collect_many(data)
 
-	for i, d in enumerate(data):
-		measurement = d['measurement']
-		line = measurement
-		tags = d['tags']
-		if len(tags) > 0:
-			tags = ["{}={}".format(k, v) for k, v in tags.items()]
-			tags = ",".join(tags)
-			line = line + ',' + tags
-		fields = d['fields']
-		fields = ["{}={}".format(k, str(v)) for k, v in fields.items()]
-		fields = ",".join(fields)
-		line = line + ' ' + fields
-		data[i] = line
+	data = metrics_load_average.metrics()
+	print data
+	m.collect_many(data)
 
-	data = "\n".join(data)
-
-	url='http://{}:{}/write?consistency=&db={}&precision=&rp='.format(dbhost, dbport, dbname)
-	r = requests.post(
-		url=url,
-		auth=HTTPBasicAuth(dbuser, dbpass),
-		data=data,
-	)
-	# expected 204 - no content
-	# print r.status_code
+	m.send()
 
 	time.sleep(sleep)
