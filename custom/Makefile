@@ -4,16 +4,16 @@ CONTAINER = monitor-custom
 start: stop
 	docker \
 		run \
-		--detach=true \
+		--detach \
 		--link influx-server:influx-server \
-		-e TERM=xterm \
-		--restart=unless-stopped \
-		-v ~/.bash_history:/root/.bash_history \
-		-v "$(BASE)/container-bin:/usr/local/bin" \
-		-v /proc:/host/proc \
+		--env TERM=xterm \
+		--restart unless-stopped \
+		--volume ~/.bash_history:/root/.bash_history \
+		--volume "$(BASE)/container-bin:/monitoring" \
+		--volume /proc:/host/proc \
 		--name "$(CONTAINER)" \
 		python-influxdb-pkg \
-		/usr/local/bin/monitor
+		/monitoring/monitor /monitoring/monitor.conf
 
 stop:
 	@echo "Stopping container: $(CONTAINER)"
