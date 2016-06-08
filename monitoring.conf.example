@@ -1,0 +1,11 @@
+[Database]
+host = localhost
+port = 8086
+name = databasename
+user = username
+pass = password
+precision = s
+rp =
+
+[Tags]
+host = myhostname
