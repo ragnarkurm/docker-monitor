@@ -97,7 +97,7 @@ class Monitoring:
 			elif type(v) is float:
 				v = str(v)
 			else:
-				raise Exception('Unexpected type in conf: ' + str(type(v)))
+				raise Exception('Unexpected type in data: ' + str(type(v)))
 			kv = '{}={}'.format(k, v)
 			fields2.append(kv)
 		fields2 = ','.join(fields2)
