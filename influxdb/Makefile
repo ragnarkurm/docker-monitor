@@ -1,6 +1,6 @@
 CONTAINER = influx-server
 BASE = /monitoring/influxdb
-IP = 194.204.13.108
+IP = 127.0.0.1
 
 start_public:
 	make start START_FLAGS='-p 8083:8083 -p 8086:8086'
