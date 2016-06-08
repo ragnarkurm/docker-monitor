@@ -1,7 +1,4 @@
 grafana/data
 grafana/logs
 influxdb/data
-influxdb/pass.txt
-influxdb/user.txt
-conf.py
 *.pyc
