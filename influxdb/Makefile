@@ -13,16 +13,17 @@ build: stop
 	make stop
 
 start: stop
-	docker run \
-	--detach=true \
-	--publish="${IP}:8086:8086" \
-	--expose 8086 \
-	-e TERM=xterm \
-	-v ~/.bash_history:/root/.bash_history \
-	--restart=unless-stopped \
-	--name "$(CONTAINER)" \
-	--volume="$(BASE)/data:/data" \
-	tutum/influxdb
+	docker \
+		run \
+		--detach \
+		--env TERM=xterm \
+		--expose 8086 \
+		--name "$(CONTAINER)" \
+		--publish "${IP}:8086:8086" \
+		--restart unless-stopped \
+		--volume "$(BASE)/data:/data" \
+		--volume ~/.bash_history:/root/.bash_history \
+		tutum/influxdb
 
 stop:
 	@echo "Stopping container: $(CONTAINER)"
