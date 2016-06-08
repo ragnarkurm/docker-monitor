@@ -1,6 +1,6 @@
 import os
 
-def metrics(prev):
+def metrics():
 	base = '/proc'
 	items = os.listdir(base)
 	stats = {}
@@ -32,21 +32,14 @@ def metrics(prev):
 
 	data = {}
 	for exe in stats:
-		if not exe in prev:
-			continue
-		diff = stats[exe] - prev[exe]
-		if diff <= 0: # sometimes negative if some process exits
-			continue
 		data[exe] = {
 			'measurement': 'cpu_exe_time',
 			'tags': {
 				'exe': exe,
 			},
 			'fields': {
-				'value': diff,
+				'value': stats[exe],
 			},
 		}
 
-	data = data.values()
-
-	return [stats, data]
+	return data.values()
