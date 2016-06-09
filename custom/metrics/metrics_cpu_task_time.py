@@ -15,7 +15,7 @@ keys = [
 import re
 def metrics():
 
-	f = open('/host/proc/stat', 'r')
+	f = open('/proc/stat', 'r')
 	line = f.readline()
 	f.close()
 

@@ -1,0 +1,55 @@
+#!/usr/bin/python2.7
+
+sleep=20
+
+# make sure only one instance runs
+def lock(ip, port):
+	import sys
+	import socket
+	try:
+		global lock_sock
+		lock_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		lock_sock.bind((ip, port))
+	except:
+		sys.exit()
+
+def metrices():
+
+	# these two must be in this way to be able to import
+	# submodules into own subnamespace
+
+	# create a list of function references
+	packs = []
+	for p in dir(metrics):
+		if not p.startswith('metrics_'):
+			continue
+		packs.append(getattr(metrics, p))
+
+	return packs
+
+import sys
+if len(sys.argv) < 1 + 1:
+	print 'Usage: ' + sys.argv[0] + ' <conf>'
+	sys.exit(1)
+
+conffile = sys.argv[1]
+
+lock('127.0.0.1', 12345)
+
+from Monitoring import Monitoring
+m = Monitoring(conffile)
+
+from metrics import *
+import metrics as metrics
+packs = metrices()
+
+import time
+while True:
+
+	for p in packs:
+		data = p.metrics()
+		m.collect_many(data)
+
+	m.send()
+
+	time.sleep(sleep)
