@@ -14,7 +14,7 @@ start: stop
 		--env TERM=xterm \
 		--link influxsrv:influxsrv \
 		--log-driver=syslog \
-		--log-opt tag=$(WEB_CONTAINER) \
+		--log-opt tag=$(CONTAINER) \
 		--name "$(CONTAINER)" \
 		--publish 3000:3000 \
 		--restart unless-stopped \

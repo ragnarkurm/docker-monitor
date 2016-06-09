@@ -17,6 +17,8 @@ start: stop
 		--detach \
 		--env TERM=xterm \
 		--expose 8086 \
+		--log-driver=syslog \
+		--log-opt "tag=$(CONTAINER)" \
 		--name "$(CONTAINER)" \
 		--publish "${IP}:8086:8086" \
 		--restart unless-stopped \
