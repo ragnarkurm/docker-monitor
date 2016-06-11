@@ -17,7 +17,7 @@ start: stop
 		--detach \
 		--env TERM=xterm \
 		--expose 8086 \
-		--log-driver=syslog \
+		--log-driver syslog \
 		--log-opt "tag=$(CONTAINER)" \
 		--name "$(CONTAINER)" \
 		--publish "${IP}:8086:8086" \
@@ -44,5 +44,5 @@ console:
 shell:
 	docker exec \
 		-it \
-		"$(CONTAINER)"
+		"$(CONTAINER)" \
 		/bin/bash
