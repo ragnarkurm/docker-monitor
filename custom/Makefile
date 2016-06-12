@@ -1,4 +1,4 @@
-BASE = /monitoring/custom
+BASE = $(shell pwd)
 CONTAINER = monitoring-custom
 
 start: stop
