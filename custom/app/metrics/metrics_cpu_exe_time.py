@@ -1,7 +1,7 @@
 import os
 
 def metrics():
-	base = '/proc'
+	base = '/host/proc'
 	items = os.listdir(base)
 	stats = {}
 	for f in items:

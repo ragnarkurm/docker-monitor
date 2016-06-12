@@ -1,7 +1,7 @@
 import os
 
 def metrics():
-	f = open('/proc/loadavg', 'r')
+	f = open('/host/proc/loadavg', 'r')
 	line = f.readline()
 	f.close()
 	load = line.split(' ')
